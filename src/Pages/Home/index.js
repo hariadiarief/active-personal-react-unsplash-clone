@@ -1,10 +1,11 @@
-import { Input, Pagination } from 'antd'
-import React, { useEffect, useState } from 'react'
+import { Input, Pagination, Spin } from 'antd'
+import React, { lazy, Suspense, useEffect, useState } from 'react'
+
 import API from 'Services/API'
-import ImageList from '../ImageList'
+const ImageList = lazy(() => import('../ImageList'))
 
 export default function Home() {
-    const [query, setQuery] = useState('')
+    const [query, setQuery] = useState(null)
     const [images, setImages] = useState([])
     const [page, setPage] = useState(1)
     const [per_page, setPerPage] = useState(10)
@@ -15,11 +16,13 @@ export default function Home() {
     }
 
     const fetchSearchPhoto = () => {
-        API.get('/search/photos', {
-            params: { query, page, per_page },
-        }).then((res) => {
-            if (res.status === 200) setImages(res.data)
-        })
+        if (query !== null) {
+            API.get('/search/photos', {
+                params: { query, page, per_page },
+            }).then((res) => {
+                if (res.status === 200) setImages(res.data)
+            })
+        }
     }
     useEffect(fetchSearchPhoto, [page, per_page])
 
@@ -36,17 +39,19 @@ export default function Home() {
             />
             {!images || !images?.results?.length ? null : (
                 <>
-                    <ImageList images={images.results} />
+                    <Suspense fallback={<Spin wrapperClassName className='spiner--wrapper' size='large' />}>
+                        <ImageList images={images.results} />
+                    </Suspense>
+                    <Pagination
+                        responsive={true}
+                        pageSize={per_page}
+                        current={page}
+                        total={images.total}
+                        showTotal={(total) => `Total ${total} items`}
+                        onChange={paginate}
+                    />
                 </>
             )}
-            <Pagination
-                responsive={true}
-                pageSize={per_page}
-                current={page}
-                total={images.total}
-                showTotal={(total) => `Total ${total} items`}
-                onChange={paginate}
-            />
         </div>
     )
 }

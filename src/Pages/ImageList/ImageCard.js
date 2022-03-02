@@ -1,35 +1,25 @@
-import React from 'react'
+import React, { useEffect, useRef, useState } from 'react'
+import { useEventListener } from 'Hook/useEventListener'
 
-class ImageCard extends React.Component {
-    constructor(props) {
-        super(props)
+export default function ImageCard({ image }) {
+    const { description, urls } = image
+    const [spans, setSpans] = useState(0)
+    const imageRef = useRef()
 
-        this.state = { spans: 0 }
-
-        this.imageRef = React.createRef()
-    }
-
-    componentDidMount() {
-        this.imageRef.current.addEventListener('load', this.setSpans)
-    }
-
-    setSpans = () => {
-        const height = this.imageRef.current.clientHeight
-
+    const calculateSpan = () => {
+        const height = imageRef.current.clientHeight
         const spans = Math.ceil(height / 10)
-
-        this.setState({ spans })
+        setSpans(spans)
     }
 
-    render() {
-        const { description, urls } = this.props.image
+    useEffect(() => {
+        imageRef.current.addEventListener('load', calculateSpan)
+    }, [image])
 
-        return (
-            <div style={{ gridRowEnd: `span ${this.state.spans}` }}>
-                <img ref={this.imageRef} alt={description} src={urls.regular} />
-            </div>
-        )
-    }
+    useEventListener('load', calculateSpan)
+    return (
+        <div style={{ gridRowEnd: `span ${spans}` }}>
+            <img ref={imageRef} alt={description} src={urls.regular} />
+        </div>
+    )
 }
-
-export default ImageCard

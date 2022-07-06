@@ -1,38 +1,56 @@
-import { Input, Pagination, Spin } from 'antd'
+import { Input, Spin } from 'antd'
 import React, { lazy, Suspense, useEffect, useState } from 'react'
-import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
+import InfiniteScroll from 'react-infinite-scroll-component';
 
 import API from 'Services/API'
-const ImageList = lazy(() => import('./ImageList'))
+const ImageCard = lazy(() => import('./ImageCard'))
 
 export default function Search() {
     let [searchParams, setSearchParams] = useSearchParams();
     const [query, setQuery] = useState(searchParams.get('q') || '')
 
     const [images, setImages] = useState([])
+    const [pagination, setPagination] = useState({
+        total: 0,
+        total_pages: 0
+    })
+
     const [page, setPage] = useState(1)
-    const [per_page, setPerPage] = useState(10)
+    const [per_page] = useState(10)
 
-
-    const updateQuery = (value) => {
-        if (!value) {
-            fetchSearchPhoto(searchParams.get('q'))
-        } else {
-            setSearchParams({ q: query })
-            fetchSearchPhoto(value)
-        }
-
-    }
-    useEffect(updateQuery, [])
-
-    const fetchSearchPhoto = (q) => {
-        API.get('/search/photos', {
-            params: { query: q, page, per_page },
-        }).then((res) => {
-            if (res.status === 200) setImages(res.data)
+    const resetState = () => {
+        setImages([])
+        setPage(1)
+        setPagination({
+            total: 0,
+            total_pages: 0
         })
     }
 
+    const updateQ = () => {
+        setSearchParams({ q: query })
+        resetState()
+    }
+
+    const fetchSearchPhoto = () => {
+        API.get('/search/photos', {
+            params: { query, page, per_page },
+        }).then((res) => {
+            if (res.status === 200) {
+                if (page === 1) {
+                    setImages(res.data.results)
+                } else {
+                    setImages(images.concat(res.data.results))
+                }
+                setPagination({
+                    total: res.data.total,
+                    total_pages: res.data.total_pages,
+                })
+            }
+        })
+    }
+    useEffect(() => fetchSearchPhoto(), [page, searchParams.get('q')])
 
 
     return (
@@ -43,17 +61,44 @@ export default function Search() {
                 enterButton='Search'
                 size='large'
                 onChange={({ target: { value } }) => setQuery(value)}
-                onSearch={(value) => updateQuery(value)}
+                onSearch={(value) => updateQ(value)}
                 value={query}
             />
+            <Suspense fallback={<Spin wrapperClassName className='spiner--wrapper' size='large' />}>
+                <InfiniteScroll
+                    className='image-list'
+                    dataLength={images.length} //This is important field to render the next data
+                    next={() => setPage(page + 1)}
+                    hasMore={page <= pagination.total_pages}
+                    loader={<Spin wrapperClassName className='spiner--wrapper' size='large' />}
+                    endMessage={
+                        <p style={{ textAlign: 'center' }}>
+                            <b>Yay! You have seen it all</b>
+                        </p>
+                    }
+                // below props only if you need pull down functionality
 
-            {!images || !images?.results?.length ? null : (
-                <>
-                    <Suspense fallback={<Spin wrapperClassName className='spiner--wrapper' size='large' />}>
-                        <ImageList images={images.results} />
-                    </Suspense>
-                </>
-            )}
-        </div>
+                // refreshFunction={() => fetchSearchPhoto(query)}
+                // pullDownToRefresh
+                // pullDownToRefreshThreshold={50}
+                // pullDownToRefreshContent={
+                // <h3 style={{ textAlign: 'center' }}>&#8595; Pull down to refresh</h3>
+                // }
+                // releaseToRefreshContent={
+                // <h3 style={{ textAlign: 'center' }}>&#8593; Release to refresh</h3>
+                // }
+                >
+                    {
+                        images.map((image, index) => {
+                            return <ImageCard key={index} image={image} />
+                        })
+                    }
+                </InfiniteScroll>
+            </Suspense>
+
+
+
+
+        </div >
     )
 }

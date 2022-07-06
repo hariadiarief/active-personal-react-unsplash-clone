@@ -1,5 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
-import { useEventListener } from 'Hook/useEventListener'
+import React, { useRef, useState } from 'react'
 
 export default function ImageCard({ image }) {
     const { description, urls } = image
@@ -12,14 +11,9 @@ export default function ImageCard({ image }) {
         setSpans(spans)
     }
 
-    useEffect(() => {
-        imageRef.current.addEventListener('load', calculateSpan)
-    }, [image])
-
-    useEventListener('load', calculateSpan)
     return (
         <div style={{ gridRowEnd: `span ${spans}` }}>
-            <img ref={imageRef} alt={description} src={urls.regular} />
+            <img ref={imageRef} alt={description} src={urls.small} onLoad={calculateSpan} />
         </div>
     )
 }

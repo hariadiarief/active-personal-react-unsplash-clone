@@ -1,30 +1,22 @@
 import { Input, Pagination, Spin } from 'antd'
 import React, { lazy, Suspense, useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom';
 
-import API from 'Services/API'
-const ImageList = lazy(() => import('../ImageList'))
 
 export default function Home() {
-    const [query, setQuery] = useState(null)
-    const [images, setImages] = useState([])
-    const [page, setPage] = useState(1)
-    const [per_page, setPerPage] = useState(10)
+    let navigate = useNavigate();
 
-    const paginate = (newPage, newPageSize) => {
-        if (page !== newPage) setPage(newPage)
-        if (per_page !== newPageSize) setPerPage(newPageSize)
-    }
+    const [query, setQuery] = useState(null)
+
 
     const fetchSearchPhoto = () => {
         if (query !== null) {
-            API.get('/search/photos', {
-                params: { query, page, per_page },
-            }).then((res) => {
-                if (res.status === 200) setImages(res.data)
+            navigate({
+                pathname: 'search',
+                search: `?q=${query}`,
             })
         }
     }
-    useEffect(fetchSearchPhoto, [page, per_page])
 
     return (
         <div className='container home'>
@@ -37,21 +29,6 @@ export default function Home() {
                 onSearch={fetchSearchPhoto}
                 value={query}
             />
-            {!images || !images?.results?.length ? null : (
-                <>
-                    <Suspense fallback={<Spin wrapperClassName className='spiner--wrapper' size='large' />}>
-                        <ImageList images={images.results} />
-                    </Suspense>
-                    <Pagination
-                        responsive={true}
-                        pageSize={per_page}
-                        current={page}
-                        total={images.total}
-                        showTotal={(total) => `Total ${total} items`}
-                        onChange={paginate}
-                    />
-                </>
-            )}
         </div>
     )
 }

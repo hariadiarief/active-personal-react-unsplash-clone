@@ -52,7 +52,6 @@ export default function Search() {
     }
     useEffect(() => fetchSearchPhoto(), [page, searchParams.get('q')])
 
-
     return (
         <div className='container'>
             <Input.Search
@@ -66,27 +65,11 @@ export default function Search() {
             />
             <Suspense fallback={<Spin wrapperClassName className='spiner--wrapper' size='large' />}>
                 <InfiniteScroll
-                    className='image-list'
+                    className='search__image-list'
                     dataLength={images.length} //This is important field to render the next data
                     next={() => setPage(page + 1)}
                     hasMore={page <= pagination.total_pages}
                     loader={<Spin wrapperClassName className='spiner--wrapper' size='large' />}
-                    endMessage={
-                        <p style={{ textAlign: 'center' }}>
-                            <b>Yay! You have seen it all</b>
-                        </p>
-                    }
-                // below props only if you need pull down functionality
-
-                // refreshFunction={() => fetchSearchPhoto(query)}
-                // pullDownToRefresh
-                // pullDownToRefreshThreshold={50}
-                // pullDownToRefreshContent={
-                // <h3 style={{ textAlign: 'center' }}>&#8595; Pull down to refresh</h3>
-                // }
-                // releaseToRefreshContent={
-                // <h3 style={{ textAlign: 'center' }}>&#8593; Release to refresh</h3>
-                // }
                 >
                     {
                         images.map((image, index) => {

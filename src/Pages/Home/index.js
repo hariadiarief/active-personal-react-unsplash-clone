@@ -1,5 +1,5 @@
-import { Input, Pagination, Spin } from 'antd'
-import React, { lazy, Suspense, useEffect, useState } from 'react'
+import { Input } from 'antd'
+import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 
 
@@ -7,7 +7,6 @@ export default function Home() {
     let navigate = useNavigate();
 
     const [query, setQuery] = useState(null)
-
 
     const fetchSearchPhoto = () => {
         if (query !== null) {

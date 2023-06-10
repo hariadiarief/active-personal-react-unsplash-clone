@@ -4,7 +4,7 @@ import { useSearchParams } from 'react-router-dom';
 import InfiniteScroll from 'react-infinite-scroll-component';
 
 import API from 'Services/API'
-const ImageCard = lazy(() => import('./ImageCard'))
+const ImageCard = lazy(async () => await import('./ImageCard'))
 
 export default function Search() {
     let [searchParams, setSearchParams] = useSearchParams();

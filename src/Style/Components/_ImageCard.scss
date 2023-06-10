@@ -1,0 +1,27 @@
+.image-card {
+    position: relative;
+    cursor: zoom-in;
+
+    &__thumbnail {
+        width: 250px;
+    }
+
+    &__item {
+        color: white;
+        height: calc(100% - 10px);
+        width: 100%;
+        opacity: 0;
+
+        position: absolute;
+        z-index: 2;
+        top: 0;
+        left: 0;
+        transition: color .1s ease-in-out, opacity .1s ease-in-out;
+
+        &:hover {
+            background-color: rgba(0, 0, 0, 0.5);
+            opacity: 1;
+        }
+    }
+
+}

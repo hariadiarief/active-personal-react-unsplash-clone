@@ -1,7 +1,8 @@
-import { Input, Spin } from 'antd'
+import { Input, Modal, Spin } from 'antd'
 import React, { lazy, Suspense, useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import ReactModal from 'react-modal';
 
 import API from 'Services/API'
 const ImageCard = lazy(async () => await import('./ImageCard'))
@@ -18,6 +19,10 @@ export default function Search() {
 
     const [page, setPage] = useState(1)
     const [per_page] = useState(10)
+
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedImage, setSelectedImage] = useState(null);
+
 
     const resetState = () => {
         setImages([])
@@ -53,35 +58,58 @@ export default function Search() {
     useEffect(() => fetchSearchPhoto(), [page, searchParams.get('q')])
 
     return (
-        <div className='container'>
-            <Input.Search
-                placeholder='Search free high-resolution photos'
-                allowClear
-                enterButton='Search'
-                size='large'
-                onChange={({ target: { value } }) => setQuery(value)}
-                onSearch={(value) => updateQ(value)}
-                value={query}
-            />
-            <Suspense fallback={<Spin wrapperClassName className='spiner--wrapper' size='large' />}>
-                <InfiniteScroll
-                    className='search__image-list'
-                    dataLength={images.length} //This is important field to render the next data
-                    next={() => setPage(page + 1)}
-                    hasMore={page <= pagination.total_pages}
-                    loader={<Spin wrapperClassName className='spiner--wrapper' size='large' />}
-                >
-                    {
-                        images.map((image, index) => {
-                            return <ImageCard key={index} image={image} />
-                        })
-                    }
-                </InfiniteScroll>
-            </Suspense>
+        <>
+            <div className='container'>
+                <Input.Search
+                    placeholder='Search free high-resolution photos'
+                    allowClear
+                    enterButton='Search'
+                    size='large'
+                    onChange={({ target: { value } }) => setQuery(value)}
+                    onSearch={(value) => updateQ(value)}
+                    value={query}
+                />
 
+                <Suspense fallback={<Spin wrapperClassName className='spiner--wrapper' size='large' />}>
+                    <InfiniteScroll
+                        className='search__image-list'
+                        dataLength={images.length} //This is important field to render the next data
+                        next={() => setPage(page + 1)}
+                        hasMore={page <= pagination.total_pages}
+                        loader={<Spin wrapperClassName className='spiner--wrapper' size='large' />}
+                    >
+                        {
+                            images.map((image, index) => {
+                                return <ImageCard key={index} image={image} onClick={() => {
+                                    setIsModalOpen(true)
+                                    setSelectedImage(image)
+                                }} />
+                            })
+                        }
+                    </InfiniteScroll>
+                </Suspense>
+            </div >
 
+            <ReactModal
+                closeTimeoutMS={600}
+                isOpen={isModalOpen}
+                onRequestClose={() => setIsModalOpen(false)}
+                shouldCloseOnOverlayClick={true}
+                shouldCloseOnEsc={true}
+                preventScroll={true}
+                className='modalContainer'
+                overlayClassName='modalOverlayCenter'
+                contentLabel="image-detail"
+            >
+                {
+                    !selectedImage
+                        ? null
+                        : <div className='selected-image'>
+                            <img className='' alt={selectedImage.description} src={selectedImage.urls.full} />
+                        </div>
+                }
 
-
-        </div >
+            </ReactModal>
+        </>
     )
 }

@@ -9,3 +9,16 @@
     min-height: 100vh;
     overflow: hidden !important;
 }
+
+.selected-image {
+    display: flex;
+    flex-direction: column;
+
+    background-color: white;
+    border-radius: 21px;
+    position: relative;
+
+    img {
+        max-height: 80vh;
+    }
+}

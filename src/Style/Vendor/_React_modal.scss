@@ -1,0 +1,78 @@
+/* ==========================================
+              MODAL CONTAINER
+==========================================*/
+.modalContainer {
+    position: absolute;
+    overflow-y: auto;
+}
+
+.modalOverlay {
+    overflow-y: auto;
+    position: fixed;
+
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: hsla(100, 4%, 15%, 0.75);
+    z-index: 99;
+}
+
+.modalOverlayCenter {
+    @extend .modalOverlay;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modalOverlayJustifyCenter {
+    @extend .modalOverlay;
+    display: flex;
+    justify-content: center;
+}
+
+.ReactModal__Overlay {
+    opacity: 0;
+}
+
+.ReactModal__Overlay--after-open {
+    opacity: 1;
+
+    .ReactModal__Content {
+        @extend .slide-top;
+    }
+}
+
+.ReactModal__Overlay--before-close {
+    .ReactModal__Content {
+        @extend .slide-bottom;
+    }
+}
+
+.slide-top {
+    animation: slide-top .5s ease-in both
+}
+
+.slide-bottom {
+    animation: slide-bottom .5s ease-out both
+}
+
+@keyframes slide-top {
+    0% {
+        transform: translateY(500px)
+    }
+
+    100% {
+        transform: translateY(0px)
+    }
+}
+
+@keyframes slide-bottom {
+    0% {
+        transform: translateY(0)
+    }
+
+    100% {
+        transform: translateY(1000px)
+    }
+}

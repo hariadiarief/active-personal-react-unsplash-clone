@@ -1,6 +1,6 @@
 import { lazy } from 'react'
-const Home = lazy(() => import('./Pages/Home'))
-const Search = lazy(() => import('./Pages/Search'))
+const Home = lazy(async () => await import('./Pages/Home'))
+const Search = lazy(async () => await import('./Pages/Search'))
 
 export const publicRoutes = [
     {

@@ -23,17 +23,17 @@ export const AppRoutes = () => {
                         element={<Home />}
                     />
                     <Route
-                        path='search'
+                        path='/search'
                         element={<Search />}
                     />
 
                     <Route
-                        path='favorite'
+                        path='/favorite'
                         element={<Favorite />}
                     />
                 </Route>
                 <Route
-                    path='callback'
+                    path='/callback'
                     element={<Callback />}
                 />
             </Routes>

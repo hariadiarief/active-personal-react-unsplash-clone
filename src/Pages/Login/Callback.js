@@ -21,11 +21,11 @@ const Callback = () => {
         axios.post('https://unsplash.com/oauth/token', requestBody)
             .then(response => {
                 localStorage.setItem('token', response.data.access_token)
-                navigate("/")
             })
             .catch(error => {
                 console.error(error);
             })
+            .finally(() => navigate("/"))
     }, []);
 
     return (

@@ -77,8 +77,9 @@ export default function ImageCard({ image }) {
                             </a>
                         </Tooltip>
 
-                        <Tooltip title="favorite">
+                        <Tooltip title={`favorite ${!localStorage.getItem('token') && '- login first'}`}>
                             <Button
+                                disabled={!localStorage.getItem('token')}
                                 onClick={isLiked ? unLikePhoto : likePhoto}
                                 style={isLiked ? { backgroundColor: "#f15151" } : {}}
                                 icon={

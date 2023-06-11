@@ -1,8 +1,11 @@
 import { Avatar, Button, Popover, Space, Tooltip } from 'antd'
 import React, { useRef, useState } from 'react'
-import { DownloadOutlined, HeartOutlined, HeartTwoTone } from '@ant-design/icons';
+import { EmailShareButton, FacebookShareButton, WhatsappShareButton } from "react-share";
+import {
+    DownloadOutlined, HeartOutlined, HeartTwoTone, ShareAltOutlined, MailOutlined, WhatsAppOutlined, FacebookOutlined
+} from '@ant-design/icons';
 import fetchAPI from 'Services/API';
-import ModalDetail from '../../Components/ModalDetail';
+import ModalDetail from 'Components/ModalDetail';
 
 export default function ImageCard({ image }) {
     const { description, urls, user, alt_description, liked_by_user, id } = image
@@ -18,7 +21,6 @@ export default function ImageCard({ image }) {
         const spans = Math.ceil(height)
         setSpans(spans)
     }
-
 
     const likePhoto = () => {
         fetchAPI.post(`/photos/${id}/like`, { params: { id } }, { headers: { "Authorization": `Bearer ${localStorage.getItem('token')}` } })
@@ -39,6 +41,20 @@ export default function ImageCard({ image }) {
                 }
             })
     }
+
+    const shareItem = () => (
+        <Space>
+            <FacebookShareButton url={urls.full} >
+                <FacebookOutlined />
+            </FacebookShareButton>
+            <EmailShareButton url={urls.full}>
+                <MailOutlined />
+            </EmailShareButton>
+            <WhatsappShareButton url={urls.full}>
+                <WhatsAppOutlined />
+            </WhatsappShareButton>
+        </Space>
+    );
 
     return (
         <>
@@ -72,6 +88,13 @@ export default function ImageCard({ image }) {
                                 }
                             />
                         </Tooltip>
+
+                        <Popover content={shareItem} >
+                            <Button
+                                icon={<ShareAltOutlined />}
+                            ></Button>
+                        </Popover>
+
                     </Space>
                 </div>
             </div>

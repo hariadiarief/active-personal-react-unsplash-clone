@@ -16,11 +16,7 @@ export const AppRoutes = () => {
     return (
         <BrowserRouter>
             <Routes >
-                <Route
-                    path='callback'
-                    element={<Callback />}
-                />
-                <Route element={<Layout />} >
+                <Route path='/' element={<Layout />} >
                     <Route path="*" element={<NotFound />} />
                     <Route
                         index
@@ -36,6 +32,10 @@ export const AppRoutes = () => {
                         element={<Favorite />}
                     />
                 </Route>
+                <Route
+                    path='callback'
+                    element={<Callback />}
+                />
             </Routes>
         </BrowserRouter>
     );

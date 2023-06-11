@@ -3,6 +3,9 @@ import ReactDOM from 'react-dom/client';
 import reportWebVitals from './reportWebVitals';
 
 import 'antd/dist/reset.css';
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from 'react-toastify';
+
 
 
 import App from './App'
@@ -10,9 +13,23 @@ import './Style/Main.scss'
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-    // <React.StrictMode>
-    <App />
-    // </React.StrictMode >
+    <>
+        {/* <React.StrictMode> */}
+        <App />
+        <ToastContainer
+            position="top-right"
+            autoClose={5000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="light" />
+
+        {/* </React.StrictMode > */}
+    </>
 );
 
 // If you want to start measuring performance in your app, pass a function

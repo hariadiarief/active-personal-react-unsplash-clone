@@ -19,6 +19,7 @@ export default function ImageCard({ image }) {
         setSpans(spans)
     }
 
+
     const likePhoto = () => {
         fetchAPI.post(`/photos/${id}/like`, { params: { id } }, { headers: { "Authorization": `Bearer ${localStorage.getItem('token')}` } })
             .then((res) => {
@@ -55,7 +56,7 @@ export default function ImageCard({ image }) {
                     </div>
                     <Space className='image-card__action flex-row-reverse'>
                         <Tooltip title="download">
-                            <a href={urls.full} download>
+                            <a href={urls.full} download target="_blank" rel="noopener noreferrer">
                                 <Button icon={< DownloadOutlined />} />
                             </a>
                         </Tooltip>

@@ -15,9 +15,6 @@ export default function Home() {
     const [page, setPage] = useState(1)
     const [per_page] = useState(10)
 
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [selectedImage, setSelectedImage] = useState(null);
-
     const fetchSearchPhoto = () => {
         if (query !== null) {
             navigate({
@@ -70,22 +67,13 @@ export default function Home() {
                             >
                                 {
                                     images.map((image, index) => {
-                                        return <ImageCard key={index} image={image} onClick={() => {
-                                            setIsModalOpen(true)
-                                            setSelectedImage(image)
-                                        }} />
+                                        return <ImageCard key={index} image={image} />
                                     })
                                 }
                             </InfiniteScroll>
                     }
                 </Suspense>
             </div>
-
-            <ModalDetail
-                isModalOpen={isModalOpen}
-                setIsModalOpen={setIsModalOpen}
-                selectedImage={selectedImage}
-            />
         </>
 
     )

@@ -3,14 +3,6 @@ import { useNavigate } from "react-router-dom";
 
 import axios from 'axios';
 
-const config = {
-    unsplash: {
-        accessKey: 'S0eywkacHJBqhhAz8tbtsHRykLcbxgoAR2q2YJrREdc',
-        secretKey: 'sSd8EQAhsYpt3ZWmyPA6AokiSnP4v70C0NxWO5H2odc',
-        callbackUrl: 'http://localhost:3000/callback' // Ganti dengan URL callback yang sesuai
-    }
-};
-
 const Callback = () => {
     const navigate = useNavigate();
 
@@ -29,14 +21,11 @@ const Callback = () => {
         axios.post('https://unsplash.com/oauth/token', requestBody)
             .then(response => {
                 localStorage.setItem('token', response.data.access_token)
-
-            }).then(() => navigate("/"))
+                    .then(() => navigate("/"))
+            })
             .catch(error => {
                 console.error(error);
-            }).finally(() => {
-                console.log('123', localStorage.getItem('token'))
-            }
-            );
+            })
     }, []);
 
     return (

@@ -5,12 +5,12 @@ import {
     Routes
 } from 'react-router-dom'
 
-const Layout = lazy(async () => await import('./Components/Layout'))
-const Home = lazy(async () => await import('./Pages/Home'))
-const Search = lazy(async () => await import('./Pages/Search'))
-const Callback = lazy(async () => await import('./Pages/Login/Callback'))
-const Favorite = lazy(async () => await import('./Pages/Favorite'))
-const NotFound = lazy(async () => await import('./Pages/NotFoud404'))
+import Layout from './Components/Layout'
+import Home from './Pages/Home'
+import Search from './Pages/Search'
+import Callback from './Pages/Login/Callback'
+import Favorite from './Pages/Favorite'
+import NotFound from './Pages/NotFoud404'
 
 export const AppRoutes = () => {
     return (
